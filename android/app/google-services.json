@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1072524989056",
+    "project_id": "payit-fdddc",
+    "storage_bucket": "payit-fdddc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072524989056:android:addd2e8700e0eb0fec4c65",
+        "android_client_info": {
+          "package_name": "com.example.testingg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1072524989056-qnf07hp8q6iocn7616v8qlnjhfub8at8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD95_CSgahXLPvA0GkURYguWrgWn8StKtg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1072524989056-qnf07hp8q6iocn7616v8qlnjhfub8at8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
