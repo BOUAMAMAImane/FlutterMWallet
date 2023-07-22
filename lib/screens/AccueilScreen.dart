@@ -19,6 +19,11 @@ import '../generated/l10n.dart';
 import '../shared/component.dart';
 import 'AlimentationScreen.dart';
 
+import 'package:geolocator/geolocator.dart';
+
+import 'package:device_info/device_info.dart';
+
+import 'dart:io';
 
 
 class AccueilScreen extends StatelessWidget {
@@ -29,16 +34,64 @@ class AccueilScreen extends StatelessWidget {
 
   AccueilScreen({Key? key}) : super(key: key);
 
+
+  void printDeviceInfo() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print("Android ID: ${androidInfo.androidId}"); // IMEI ou identifiant unique Android
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      print("iOS ID: ${iosInfo.identifierForVendor}"); // Identifiant unique iOS
+    }
+  }
+
+  void printCurrentDateAndTime() {
+    DateTime now = DateTime.now();
+    String currentDate = "${now.year}-${now.month}-${now.day}";
+    String currentTime = "${now.hour}:${now.minute}:${now.second}";
+    print("Date: $currentDate");
+    print("Time: $currentTime");
+  }
+
   Future<void> _refresh(context) async {
     await Future<void>.delayed(const Duration(seconds: 3));
     // when all needed is done change state
     AppCubit.get(context).loadLoggedInUserNative(AppCubit.get(context).userModel?.data.phoneNumber);
     _controller.sink.add(SwipeRefreshState.hidden);
   }
+  Future<void> _checkLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
 
+    if (permission == LocationPermission.deniedForever) {
+      // L'utilisateur a refusé définitivement l'autorisation de localisation.
+      // Vous pouvez afficher un message à l'utilisateur ou lui demander à nouveau d'autoriser la localisation GPS.
+      return;
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      // Obtenez les coordonnées GPS de l'utilisateur ici.
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      print(
+          "Latitude : ${position.latitude}, Longitude : ${position.longitude}");
+      printCurrentDateAndTime();
+
+      // Afficher les données du téléphone
+      printDeviceInfo();
+
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     UserModel? userModel = AppCubit.get(context).userModel;
+    WidgetsBinding.instance?.addPostFrameCallback((_) => _onWidgetBuild(context));
     return BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {
           if (state is AppVersementSuccessStates) {
@@ -325,4 +378,6 @@ class AccueilScreen extends StatelessWidget {
           ),
         ),
       );
+    void _onWidgetBuild(BuildContext context) {
+      _checkLocationPermission();}
 }
