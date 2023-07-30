@@ -4,7 +4,6 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testingg/cubit/app_cubit.dart';
 import 'package:testingg/cubit/app_states.dart';
-
 import 'package:testingg/screens/Transfer/TransferMoneyRoute.dart';
 import 'package:testingg/shared/Colors.dart';
 

@@ -40,25 +40,39 @@ public class AppRepository {
         }
     }
 
-    public void login(@NonNull MethodCall call, MethodChannel.Result result) throws ParseException {
+   /* public void login(@NonNull MethodCall call, MethodChannel.Result result) throws ParseException {
         String phoneNumber = call.argument("phoneNumber");
         String password = call.argument("password");
         String session = call.argument("session");
         String header = call.argument("header");
-
-
-
-
-
+        String deviceId = call.argument("deviceId");
+        double latitude = call.argument("latitude");
+        double longitude = call.argument("longitude");
         try {
 
-            String  loginResp = new Auth().login(phoneNumber,password,header,session);
-
+            String loginResp = new Auth().login(phoneNumber, password, header, session, deviceId,latitude,longitude); // Passez le deviceId ici
             result.success(loginResp);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
+   public void login(@NonNull MethodCall call, MethodChannel.Result result) throws ParseException {
+       String phoneNumber = call.argument("phoneNumber");
+       String password = call.argument("password");
+       String session = call.argument("session");
+       String header = call.argument("header");
+       String deviceId = call.argument("deviceId");
+       double latitude = call.argument("latitude"); // Ajouter cette ligne pour récupérer la latitude
+       double longitude = call.argument("longitude");
+
+       try {
+           String loginResp = new Auth().login(phoneNumber, password, header, session, deviceId, latitude, longitude);
+           result.success(loginResp);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+   }
+
 
     public void showDestinataireHistory(@NonNull MethodCall call, MethodChannel.Result result) {
         String phoneNumber = call.argument("phoneNumber");
@@ -79,7 +93,7 @@ public class AppRepository {
         String lastName = call.argument("lastName");
         String cin = call.argument("cin");
         String gender = call.argument("gender");
-
+        String deviceId = call.argument("deviceId");
 
         Map<String,Object>data = new HashMap<>();
         data.put("email",email);
@@ -89,7 +103,7 @@ public class AppRepository {
         data.put("phoneNumber",phoneNumber);
         data.put("cin",cin);
         data.put("gender",gender);
-
+        data.put("deviceId", deviceId);
         try{
             String signupResp= new Auth().register(data);
             result.success(signupResp);

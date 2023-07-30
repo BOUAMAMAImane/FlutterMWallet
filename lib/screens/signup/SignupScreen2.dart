@@ -9,9 +9,10 @@ import 'package:testingg/screens/signup/ConfirmationEmailScreen.dart';
 import 'package:testingg/screens/signup/SignupScreen3.dart';
 import 'package:testingg/shared/Colors.dart';
 import 'package:testingg/shared/component.dart';
-
 import '../../generated/l10n.dart';
 import '../Routes/custom_page_route.dart';
+
+
 
 class SignupScreen2 extends StatelessWidget {
   static String id = "SignupScreen2";
@@ -21,7 +22,6 @@ class SignupScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final jobRoleCtrl = TextEditingController();
-
     final formkey = GlobalKey<FormState>();
 
     var lasttnameController = TextEditingController();
@@ -263,6 +263,8 @@ class SignupScreen2 extends StatelessWidget {
                                       firstnameController.text;
                                   AppCubit.get(context).lastName =
                                       lasttnameController.text;
+
+
                                   Navigator.of(context).push(
                                     CustomPageRouteLeft(
                                       child: SignupScreen3(),

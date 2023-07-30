@@ -7,11 +7,34 @@ import 'package:testingg/screens/signup/ConfirmationEmailScreen.dart';
 import 'package:testingg/shared/component.dart';
 
 import '../../generated/l10n.dart';
+import 'package:device_info/device_info.dart';
+import 'package:flutter/services.dart';
 // l'utilisateur est invité à saisir son mot de passe deux fois
 
 class SignupScreen3 extends StatelessWidget {
   static String id = "SignupScreen";
   const SignupScreen3({Key? key}) : super(key: key);
+
+  Future<String?> _getDeviceId(BuildContext context) async {
+    String? deviceId;
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    try {
+      if (Theme.of(context).platform == TargetPlatform.android) {
+        final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.androidId;
+      } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+        final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor;
+      }
+    } catch (e) {
+      print("Erreur lors de la récupération de l'ID du smartphone: $e");
+      deviceId = null;
+    }
+
+    return deviceId;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -193,8 +216,9 @@ class SignupScreen3 extends StatelessWidget {
                               ],
                             ),
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (formkey.currentState!.validate()) {
+                                  String? deviceId = await _getDeviceId(context); // Get the device ID
                                   AppCubit.get(context).userSignUp(
                                     gender: AppCubit.get(context).gender,
                                     email: AppCubit.get(context).email,
@@ -204,7 +228,12 @@ class SignupScreen3 extends StatelessWidget {
                                     firstName: AppCubit.get(context).firstName,
                                     lastName: AppCubit.get(context).lastName,
                                     cin: AppCubit.get(context).cin,
-                                  );
+                                    deviceId: deviceId,
+                                    // Récupérer l'ID du smartphone
+                                   // String? deviceId = await _getDeviceId();
+                                    // deviceId: AppCubit.get(context).deviceId,
+
+                                );
                                 }
                               },
                               style: ElevatedButton.styleFrom(

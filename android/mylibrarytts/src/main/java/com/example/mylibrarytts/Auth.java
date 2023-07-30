@@ -35,7 +35,7 @@ public class Auth {
     static byte[] iv = hexStringToByteArray("48E53E0639A76C5A5E0C5BC9E3A91538");
 
 
-    public String login(String phoneNumber,String password,String header,String session) throws Exception {
+    public String login(String phoneNumber,String password,String header,String session,String deviceId, double latitude, double longitude) throws Exception {
 
         // STEP 1 :  PASSWORD TO SHA1
         MessageDigest mDigest = MessageDigest.getInstance("SHA1");
@@ -50,7 +50,6 @@ public class Auth {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
         byte[] encryptedMessage = cipher.doFinal(sb.toString().getBytes());
 
-
         String encryptedByteValue   = Base64.encodeToString(encryptedMessage,Base64.URL_SAFE);
 
         String LOGIN_END_POINT = "wallet_war/login";
@@ -58,20 +57,21 @@ public class Auth {
         RequestBody body = new FormBody.Builder()
                 .addEncoded("phoneNumber", phoneNumber)
                 .addEncoded("password",encryptedByteValue)
+                .add("deviceId", deviceId)
+                .add("deviceId", deviceId)
+                .add("latitude", String.valueOf(latitude))
+                .add("longitude", String.valueOf(longitude))
                 .build();
         Request request = new Request.Builder()
 
                 .url(url + LOGIN_END_POINT)
                 .addHeader("Cookie", header)
                 .post(body)
-
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
             String resp = Objects.requireNonNull(response.body()).string();
-
             return resp;
-
         }
     }
 

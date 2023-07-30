@@ -10,9 +10,12 @@ import 'package:testingg/network/local/cache_helper.dart';
 import 'package:testingg/screens/HomeScreen.dart';
 import 'package:testingg/screens/signup/SignupScreen1.dart';
 import 'package:testingg/shared/component.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:flutter/cupertino.dart';
+import 'package:device_info/device_info.dart';
+
+import 'package:location/location.dart';
+
+
 
 class LoginScreen extends StatefulWidget {
   static String id = "LoginScreen";
@@ -28,9 +31,101 @@ class _LoginScreenState extends State<LoginScreen> {
   var phoneNumberController = TextEditingController();
   var passwordLogController = TextEditingController();
   bool _isObscure = true;
+  String? deviceId;
+  double? latitude; // Ajoutez le paramètre latitude ici
+  double? longitude;
+/*  Future<void> _checkLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
 
+    if (permission == LocationPermission.deniedForever) {
+      return;
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+
+      print(
+          "Latitude : ${position.latitude}, Longitude : ${position.longitude}");
+    }
+
+  }*/
+  Future<void> _getUserLocation() async {
+    Location location = Location();
+    bool serviceEnabled;
+    PermissionStatus permissionStatus;
+    LocationData? locationData;
+
+    // Vérifier si le service de localisation est activé
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      // Demander à l'utilisateur d'activer les services de localisation
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        // Le service de localisation n'est toujours pas activé
+        // Handle this case (e.g., show a message to the user) or simply return
+        print('Les services de localisation sont désactivés.');
+        return;
+      }
+    }
+
+    // Vérifier la permission de localisation
+    permissionStatus = await location.hasPermission();
+    if (permissionStatus == PermissionStatus.denied) {
+      // Demander à l'utilisateur la permission de localisation
+      permissionStatus = await location.requestPermission();
+      if (permissionStatus != PermissionStatus.granted) {
+        // La permission de localisation n'est pas accordée
+        // Handle this case (e.g., show a message to the user) or simply return
+        print('La permission de localisation n\'est pas accordée.');
+        return;
+      }
+    }
+
+    // Obtenir les données de localisation
+    try {
+      locationData = await location.getLocation();
+      latitude = locationData?.latitude; // Retirez le type de données ici
+      longitude = locationData?.longitude;
+      // double? latitude = locationData?.latitude;
+      // double? longitude = locationData?.longitude;
+      print("Latitude: $latitude, Longitude: $longitude"); // Imprimer les valeurs obtenues
+    } catch (e) {
+      // Gérer les erreurs lors de la récupération de la localisation ici
+      print("Erreur lors de la récupération de la localisation: $e");
+    }
+  }
+
+
+  Future<String?> _getDeviceId(BuildContext context) async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    try {
+      if (Theme.of(context).platform == TargetPlatform.android) {
+        final AndroidDeviceInfo
+
+        androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.androidId;
+      } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+        final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor;
+      }
+    } catch (e) {
+      print("Erreur lors de la récupération de l'ID du smartphone: $e");
+      deviceId = null;
+    }
+
+    return deviceId;
+  }
   @override
   Widget build(BuildContext context) {
+
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) async {
         if (state is AppLoginSuccessStates) {
@@ -276,20 +371,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ],
                             ),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  AppCubit.get(context).userLogin(
-                                    phone_number: phoneNumberController.text,
-                                    password: passwordLogController.text,
-                                  );
-                                }
+                              child: ElevatedButton(
+                                onPressed: () async  {
+                              if (_formKey.currentState!.validate()) {
+                                String? deviceId = await _getDeviceId(context);
+                                print("Device ID: $deviceId");
+
+                                 await _getUserLocation();
+
+                                AppCubit.get(context).userLogin(
+                                phone_number: phoneNumberController.text,
+                                password: passwordLogController.text,
+                                deviceId: deviceId,
+                                  latitude: latitude,
+                                  longitude: longitude,
+                              );
+                              }
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.green,
-                                onPrimary: Colors.white,
-                                padding: const EdgeInsets.all(0),
-                                shape: const StadiumBorder(),
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              padding: const EdgeInsets.all(0),
+                              shape: const StadiumBorder(),
                               ),
                               child: Container(
                                 width: 275,

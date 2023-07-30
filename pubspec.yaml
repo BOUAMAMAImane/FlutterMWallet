@@ -73,6 +73,8 @@ dependencies:
   google_fonts: ^4.0.4
   geolocator: ^7.7.0
   device_info: ^2.0.2
+  location: ^5.0.1
+  permission_handler: ^10.4.3
 
 dependency_overrides:
   intl: 0.17.0

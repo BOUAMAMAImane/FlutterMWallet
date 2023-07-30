@@ -60,24 +60,23 @@ class AccueilScreen extends StatelessWidget {
     AppCubit.get(context).loadLoggedInUserNative(AppCubit.get(context).userModel?.data.phoneNumber);
     _controller.sink.add(SwipeRefreshState.hidden);
   }
-  Future<void> _checkLocationPermission() async {
+/*  Future<void> _checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // L'utilisateur a refusé définitivement l'autorisation de localisation.
-      // Vous pouvez afficher un message à l'utilisateur ou lui demander à nouveau d'autoriser la localisation GPS.
       return;
     }
 
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
-      // Obtenez les coordonnées GPS de l'utilisateur ici.
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
+
+
       print(
           "Latitude : ${position.latitude}, Longitude : ${position.longitude}");
       printCurrentDateAndTime();
@@ -87,7 +86,7 @@ class AccueilScreen extends StatelessWidget {
 
     }
 
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
     UserModel? userModel = AppCubit.get(context).userModel;
@@ -379,5 +378,7 @@ class AccueilScreen extends StatelessWidget {
         ),
       );
     void _onWidgetBuild(BuildContext context) {
-      _checkLocationPermission();}
+       // _checkLocationPermission();
+      }
+
 }

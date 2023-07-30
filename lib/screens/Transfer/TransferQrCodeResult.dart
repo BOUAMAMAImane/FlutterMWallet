@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testingg/cubit/app_cubit.dart';
 import 'package:testingg/cubit/app_states.dart';
-
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 import '../Routes/CustomPageRouteRight.dart';

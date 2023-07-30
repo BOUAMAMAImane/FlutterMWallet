@@ -34,6 +34,7 @@ class AppCubit extends Cubit<AppStates> {
   String? qrString;
   String? header;
   String? sessionid;
+  String? deviceId;
 
   AppCubit() : super(AppInitialStates());
 
@@ -45,6 +46,9 @@ class AppCubit extends Cubit<AppStates> {
   String? cin;
   String? phone_number;
   String? gender;
+  double? latitude;
+  double? longitude;
+
 
   static AppCubit get(context) => BlocProvider.of(context);
   static late Widget widget;
@@ -104,8 +108,12 @@ class AppCubit extends Cubit<AppStates> {
   List<TransactionModel> transactionsEmetteur = [];
   List<TransactionModel> transactionsDestinataire = [];
 
-  Future<void> userLogin(
-      {required String phone_number, required String password}) async {
+  Future<void> userLogin({
+    required String phone_number,
+    required String password,
+    required String? deviceId,
+    double? latitude,
+    double? longitude}) async {
     emit(AppLoginInitialStates());
     try {
       const MethodChannel AuthCHANNEL = MethodChannel("payit/auth");
@@ -113,9 +121,14 @@ class AppCubit extends Cubit<AppStates> {
         "phoneNumber": phone_number,
         "password": password,
         "session": sessionid,
-        "header": header
+        "header": header,
+        "deviceId": deviceId,
+       // "latitude": latitude,
+       //  "longitude": longitude
+        "latitude": latitude ?? 0.0,
+        "longitude": longitude ?? 0.0,
       });
-
+      print("APPLatitude: $latitude, Longitude: $longitude");
       userModel = UserModel.fromJson(jsonDecode(response));
       CacheHelper.saveData(key: "phone", value: userModel?.data.phoneNumber);
       emit(AppLoginSuccessStates(userModel!));
@@ -171,6 +184,7 @@ class AppCubit extends Cubit<AppStates> {
     required String? lastName,
     required String? cin,
     required String? gender,
+    required String? deviceId,
   }) async {
     emit(AppSigninInitialStates());
     try {
@@ -182,7 +196,8 @@ class AppCubit extends Cubit<AppStates> {
         "firstName": firstName,
         "lastName": lastName,
         "cin": cin,
-        "gender": gender
+        "gender": gender,
+        "deviceId": deviceId
       });
 
       emit(AppSigninSuccessStates());
