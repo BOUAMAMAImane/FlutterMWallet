@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:testingg/screens/Routes/CustomPageRouteRight.dart';
 import 'package:testingg/screens/SettingsScreen.dart';
+import 'package:testingg/screens/PageMotSecret.dart';
+import 'package:testingg/cubit/app_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testingg/models/userModel.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({Key? key}) : super(key: key);
@@ -10,6 +14,7 @@ class ResetPasswordScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _ResetPasswordScreenState();
   }
+
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
@@ -24,6 +29,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+
           onPressed: () {
             Navigator.of(context).push(
               CustomPageRouteRight(child: const SettingsScreen()),
@@ -242,7 +248,25 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            if (formkey.currentState!.validate()) {
+                              final appCubit = BlocProvider.of<AppCubit>(context);
+
+                                  UserModel? userModel = appCubit.userModel;
+                                  String userEmail = userModel?.data.email ?? '';
+                                  appCubit.sendMotsecret(
+                                  email: userEmail,
+                                  );
+
+                            }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => PageMotSecret(
+                              oldPassword: oldPassword.text,
+                              newPassword: newPassword.text,
+                                )));
+
+                          },
                           style: ElevatedButton.styleFrom(
                             primary: Colors.green,
                             onPrimary: Colors.white,
@@ -271,3 +295,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 }
+// if (formkey.currentState!.validate()) {
+// final appCubit = BlocProvider.of<AppCubit>(context);
+//
+// UserModel? userModel = appCubit.userModel; // Obtenez le UserModel du AppCubit
+// print("Adresse e-mail: ${userModel?.data.email ?? 'Non disponible'}"); // Afficher l'adresse e-mail ou "Non disponible"
+//
+// appCubit.changePassword(
+// password: oldPassword.text,
+// newPassword: newPassword.text,
+// email: userModel?.data.email ?? '', // Utilisez l'adresse e-mail si disponible, sinon utilisez une chaîne vide
+// context: context,
+// );
+// }

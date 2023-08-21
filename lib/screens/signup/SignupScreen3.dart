@@ -229,9 +229,6 @@ class SignupScreen3 extends StatelessWidget {
                                     lastName: AppCubit.get(context).lastName,
                                     cin: AppCubit.get(context).cin,
                                     deviceId: deviceId,
-                                    // Récupérer l'ID du smartphone
-                                   // String? deviceId = await _getDeviceId();
-                                    // deviceId: AppCubit.get(context).deviceId,
 
                                 );
                                 }

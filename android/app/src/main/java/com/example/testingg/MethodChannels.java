@@ -33,6 +33,8 @@ public class MethodChannels {
                                         break;
                                 case "verifyOtp" : repository.verifyOtp(call,result);
                                     break;
+                                case "sendMotsecret" : repository.sendMotsecret(call,result);
+                                    break;
                                 case "makeVersement" : repository.makeVersement(call,result);
                                     break;
 

@@ -27,7 +27,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Auth {
-    String url = "http://192.168.1.38:8040/";
+    String url = "http://192.168.1.35:8040/";
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     Gson gson = new Gson();

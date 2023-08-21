@@ -376,9 +376,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (_formKey.currentState!.validate()) {
                                 String? deviceId = await _getDeviceId(context);
                                 print("Device ID: $deviceId");
-
-                                 await _getUserLocation();
-
+                                await _getUserLocation();
                                 AppCubit.get(context).userLogin(
                                 phone_number: phoneNumberController.text,
                                 password: passwordLogController.text,

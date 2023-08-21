@@ -14,6 +14,7 @@ import 'package:testingg/network/remote/dio_helper.dart';
 import 'package:testingg/screens/AccountScreen.dart';
 
 import 'package:testingg/screens/HomeScreen.dart';
+import 'package:testingg/screens/PageMotSecret.dart';
 import 'package:testingg/screens/Payment/BillPaymentDetails.dart';
 import 'package:testingg/screens/TransactionsHistory/TransactionReceiveScreen.dart';
 import 'package:testingg/screens/TransactionsHistory/TransactionSentScreen.dart';
@@ -25,6 +26,7 @@ import '../models/TransactionInfos.dart';
 import '../screens/AccueilScreen.dart';
 import '../screens/Transfer/TransferScreen.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:testingg/screens/PageMotSecret.dart';
 
 class AppCubit extends Cubit<AppStates> {
   bool verified = false;
@@ -128,7 +130,9 @@ class AppCubit extends Cubit<AppStates> {
         "latitude": latitude ?? 0.0,
         "longitude": longitude ?? 0.0,
       });
+      print("deviceId :$deviceId" );
       print("APPLatitude: $latitude, Longitude: $longitude");
+
       userModel = UserModel.fromJson(jsonDecode(response));
       CacheHelper.saveData(key: "phone", value: userModel?.data.phoneNumber);
       emit(AppLoginSuccessStates(userModel!));
@@ -332,6 +336,7 @@ class AppCubit extends Cubit<AppStates> {
     required String password,
     required String newPassword,
     required String email,
+    required String secret,
     required context,
   }) async {
     const MethodChannel USERCHANNEL = MethodChannel("payit/user");
@@ -340,19 +345,36 @@ class AppCubit extends Cubit<AppStates> {
         "password": password,
         "email": email,
         "newPassword": newPassword,
+        "secret": secret,
       });
-
       currentIndex = 0;
       navigateAndFinish(context, HomeScreen());
       showToast(message: response);
       emit(AppVersementSuccessStates());
-
       emit(AppSendOtpSuccessState(response));
+      print("c fait !" );
     } catch (e) {
       print(e.toString());
       emit(AppVersementErrorStates());
     }
   }
+  void sendMotsecret({
+    required String email,
+  }) async {
+    const MethodChannel USERCHANNEL = MethodChannel("payit/user");
+    try {
+      var response = await USERCHANNEL.invokeMethod("sendMotsecret", {
+        "email": email,
+      });
+      emit(AppVersementSuccessStates());
+      emit(AppSendOtpSuccessState(response));
+      print("c fait !");
+    } catch (e) {
+      print(e.toString());
+      emit(AppVersementErrorStates());
+    }
+  }
+
 
   void makeVersement(montant, message, destinataire) async {
     emit(AppVersementInitialStates());

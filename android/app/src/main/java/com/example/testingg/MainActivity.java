@@ -22,16 +22,10 @@ public class MainActivity extends FlutterActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.configureFlutterEngine(flutterEngine);
-
-
           MethodChannels channels = new MethodChannels();
-
-
             channels.userChannel(flutterEngine);
             channels.historyChannel(flutterEngine);
             channels.authChannel(flutterEngine);
-
-
 
     }
 

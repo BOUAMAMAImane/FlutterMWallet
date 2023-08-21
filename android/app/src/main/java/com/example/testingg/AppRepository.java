@@ -157,7 +157,16 @@ public class AppRepository {
             e.printStackTrace();
         }
     }
-
+    public void sendMotsecret(@NonNull MethodCall call, MethodChannel.Result result) {
+        String email = call.argument("email");
+        System.out.println(email);
+        try{
+            String sendMotsecret= new User().sendMotsecret(email);
+            result.success(sendMotsecret);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public void makeVersement(MethodCall call, MethodChannel.Result result) {
         String montant = call.argument("montant");
         String destinataire = call.argument("destinataire");
@@ -182,10 +191,12 @@ public class AppRepository {
     }
 
     public void changePassword(MethodCall call, MethodChannel.Result result) throws Exception {
+        System.out.println("apprepository change password");
         String email = call.argument("email");
         String password = call.argument("password");
         String newPassword = call.argument("newPassword");
-        String changePassword = new User().changePassword(email,password,newPassword);
+        String secret = call.argument("secret");
+        String changePassword = new User().changePassword(email,password,newPassword,secret);
         result.success(changePassword);
     }
 }

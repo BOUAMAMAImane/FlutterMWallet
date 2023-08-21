@@ -14,11 +14,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import java.io.IOException;
 
 public class User {
-
-    String url = "http://192.168.1.38:8020/";
-    String url1 = "http://192.168.1.38:8040/";
+    String url = "http://192.168.1.35:8020/";
+    String url1 = "http://192.168.1.35:8040/";
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     Gson gson = new Gson();
@@ -53,6 +53,17 @@ public class User {
         RequestBody body = RequestBody.create(null, new byte[]{});
         Request request = new Request.Builder()
                 .url(url1 + REMOVE_DEVICE_TOKEN_ENDPOINT+email)
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            return Objects.requireNonNull(response.body()).string();
+        }
+    }
+    public String sendMotsecret(String email) throws Exception{
+        String SEND_MOT_SECRET_ENDPOINT = "wallet_war/registration/sendMotsecret?user_email=";
+        RequestBody body = RequestBody.create(null, new byte[]{});
+        Request request = new Request.Builder()
+                .url(url1 + SEND_MOT_SECRET_ENDPOINT+email)
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
@@ -116,33 +127,60 @@ public class User {
             return data;
         }
     }
-    public String changePassword(String email, String password, String newPassword) throws Exception{
+    public String changePassword(String email, String password, String newPassword,String secret) throws Exception {
         String CHANGE_PASSWORD_ENDPOINT = "wallet_war/registration/changepassword";
+        System.out.println("Email: " + email);
+        System.out.println("Old Password (Before Hashing): " + password);
+        System.out.println("New Password (Before Hashing): " + newPassword);
+        System.out.println("secret User.java : " + secret);
+
         MessageDigest mDigest = MessageDigest.getInstance("SHA1");
-       byte[] result = mDigest.digest(password.getBytes());
+        byte[] result = mDigest.digest(password.getBytes());
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < result.length; i++) {
             sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
         }
-        Map<String,Object>data = new HashMap<>();
-        data.put("email",email);
-        data.put("password",password);
-        data.put("newPassword",newPassword);
-        Type gsonType = new TypeToken<HashMap>(){}.getType();
 
-        String gsonString = gson.toJson(data,gsonType);
+        String hashedPassword = sb.toString(); // Le¡mot de passe actuel après hachage
+        byte[] newResult = mDigest.digest(newPassword.getBytes());
+        StringBuffer newSb = new StringBuffer();
+        for (int i = 0; i < newResult.length; i++) {
+            newSb.append(Integer.toString((newResult[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        String newHashedPassword = newSb.toString();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        data.put("password", hashedPassword);
+        data.put("newPassword", newHashedPassword);
+        data.put("secret",secret);
+        Type gsonType = new TypeToken<HashMap<String, Object>>(){}.getType();
+        String gsonString = gson.toJson(data, gsonType);
         RequestBody body = RequestBody.create(JSON, gsonString);
+
         Request request = new Request.Builder()
-                .url(url1 +CHANGE_PASSWORD_ENDPOINT)
-                .post(body)
+                .url(url1 + CHANGE_PASSWORD_ENDPOINT)
+                .put(body)
                 .build();
+
         try (Response response = client.newCall(request).execute()) {
-
-
-            return Objects.requireNonNull(response.body()).string();
+            if (response.isSuccessful()) {
+                String responseBody = Objects.requireNonNull(response.body()).string();
+                System.out.println("API Response: " + responseBody);
+                return responseBody;
+            } else {
+                System.out.println("Erreur de l'API : " + response);
+                return "Erreur de l'API : " + response;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur d'E/S : " + e.getMessage());
+            return "Erreur d'E/S : " + e.getMessage();
         }
     }
-//    imy123stage1
+
+
+    //    imy123stage1
     public String ShowHistoryEmetteur(String phoneNumber) throws Exception {
         String EMETTEUR_HISTORY = "transferws/showTransactionsEmetteur?phoneNumber=";
         Request request = new Request.Builder()
