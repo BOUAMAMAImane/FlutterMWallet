@@ -89,6 +89,8 @@ class MessageLookup extends MessageLookupByLibrary {
                 "المرجو ادخال رقم الهاتف متبوع برقم البطاقة الوطنية"),
         "firstnamecontrollermsg":
             MessageLookupByLibrary.simpleMessage("le ne doit pas être vide  "),
+        "forgot_password":
+            MessageLookupByLibrary.simpleMessage("Mot de passe oublié?"),
         "hello": MessageLookupByLibrary.simpleMessage("مرحبا"),
         "home": MessageLookupByLibrary.simpleMessage("الصفحة الرئيسية"),
         "lastnameecontrollermsg": MessageLookupByLibrary.simpleMessage(

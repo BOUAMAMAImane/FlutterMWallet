@@ -5,21 +5,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:testingg/cubit/app_cubit.dart';
 import 'package:testingg/cubit/app_states.dart';
-import 'package:testingg/generated/l10n.dart';
 import 'package:testingg/network/local/cache_helper.dart';
 import 'package:testingg/screens/HomeScreen.dart';
+import 'package:testingg/screens/Passwordforgotten.dart';
 import 'package:testingg/screens/signup/SignupScreen1.dart';
 import 'package:testingg/shared/component.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:device_info/device_info.dart';
-
 import 'package:location/location.dart';
-
-
+import 'package:testingg/generated/l10n.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = "LoginScreen";
-
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -32,8 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
   var passwordLogController = TextEditingController();
   bool _isObscure = true;
   String? deviceId;
-  double? latitude; // Ajoutez le paramètre latitude ici
+  double? latitude;
   double? longitude;
+
 /*  Future<void> _checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -308,7 +306,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Container(
                             margin: const EdgeInsets.only(top: 15, bottom: 30),
                             child: TextFormField(
-                              keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.text,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return S.of(context)
@@ -392,6 +390,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               padding: const EdgeInsets.all(0),
                               shape: const StadiumBorder(),
                               ),
+
+
                               child: Container(
                                 width: 275,
                                 height: 65,
@@ -412,6 +412,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FontStyle.normal,
                                   ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 8),
+                            child: TextButton(
+                              onPressed: () {
+                                // Naviguer vers l'écran de réinitialisation du mot de passe
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PasswordforgottenScreen(), // À implémenter
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                S.of(context).forgot_password,
+                                style: TextStyle(
+                                  color: const Color(0xff1546A0).withOpacity(0.5), // Même couleur que le texte "Not a member?"
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  decoration: TextDecoration.underline,
                                 ),
                               ),
                             ),

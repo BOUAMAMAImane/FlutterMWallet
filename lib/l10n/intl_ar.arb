@@ -84,5 +84,7 @@
  "Password": "mot de passe",
   "confirm_password": "confimer mot de passe",
   "passwordcontrollermg": "le mot de passe ne doit pas être vide",
-  "phonenumberverified": "your phone number is verified"
+  "phonenumberverified": "your phone number is verified",
+    "forgot_password": "Mot de passe oublié?"
+
 }

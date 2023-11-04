@@ -4,6 +4,7 @@ import android.util.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.security.NoSuchAlgorithmException;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -25,15 +26,127 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
+import java.util.concurrent.TimeUnit;
 public class Auth {
-    String url = "http://192.168.1.35:8040/";
+    String url = "http://192.168.137.79:8040/";
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     Gson gson = new Gson();
     private static final String CIPHER_ALGORITHM = "AES/CBC/ISO10126PADDING";
     static byte[] iv = hexStringToByteArray("48E53E0639A76C5A5E0C5BC9E3A91538");
+    public String makenewPassword(String email, String password, String question1, String question2, String question3, String secret) throws Exception {
+        String MAKENEW_PASSWORD_ENDPOINT = "wallet_war/registration/makenewpassword";
+        System.out.println("Email makenewPassword: " + email);
 
+        String hashedPassword = hashString(password);
+        String hashedQuestion1 = hashString(question1);
+        String hashedQuestion2 = hashString(question2);
+        String hashedQuestion3 = hashString(question3);
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        data.put("password", hashedPassword);
+        data.put("question1", hashedQuestion1);
+        data.put("question2", hashedQuestion2);
+        data.put("question3", hashedQuestion3);
+        data.put("secret", secret);
+
+        Type gsonType = new TypeToken<HashMap<String, Object>>() {}.getType();
+        String gsonString = gson.toJson(data, gsonType);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), gsonString);
+
+        Request request = new Request.Builder()
+                .url(url + MAKENEW_PASSWORD_ENDPOINT)
+                .put(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                return responseBody;
+            } else {
+                System.out.println("Erreur de l'API : " + response.body().string());
+                return "Erreur de l'API";
+            }
+        }}
+/*    public String makenewPassword(String email, String password, String question1,String question2,String question3,String secret) throws Exception {
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .connectTimeout(60, TimeUnit.SECONDS)
+//                .readTimeout(60, TimeUnit.SECONDS)
+//                .writeTimeout(60, TimeUnit.SECONDS)
+//                .build();
+
+        String MAKENEW_PASSWORD_ENDPOINT = "wallet_war/registration/makenewpassword";
+        System.out.println("Email makenewPassword: " + email);
+
+//        MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+//
+//        byte[] result = mDigest.digest(password.getBytes());
+//        StringBuffer sb = new StringBuffer();
+//        for (int i = 0; i < result.length; i++) {
+//            sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+//        }
+//        String hashedPassword = sb.toString();
+
+        String hashedPassword = hashString(password);
+        String hashedQuestion1 = hashString(question1);
+        String hashedQuestion2 = hashString(question2);
+        String hashedQuestion3 = hashString(question3);
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        data.put("password", hashedPassword);
+        data.put("question1",  hashedQuestion1);
+        data.put("question2",  hashedQuestion2);
+        data.put("question3",  hashedQuestion3);
+        data.put("secret",secret);
+
+        Type gsonType = new TypeToken<HashMap<String, Object>>(){}.getType();
+        String gsonString = gson.toJson(data, gsonType);
+        RequestBody body = RequestBody.create(JSON, gsonString);
+
+        Request request = new Request.Builder()
+                .url(url + MAKENEW_PASSWORD_ENDPOINT)
+                .put(body)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            String resp = Objects.requireNonNull(response.body()).string();
+            return resp;
+        }*/
+
+//        try (Response response = client.newCall(request).execute()) {
+//            if (response.isSuccessful()) {
+//                String responseBody = Objects.requireNonNull(response.body()).string();
+//                System.out.println("API Response: " + responseBody);
+//
+//                // Utilisez Gson pour extraire le message de la réponse
+//                Gson gson = new Gson();
+//                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+//                String message = jsonObject.get("message").getAsString();
+//
+//                return message;
+//            } else {
+//                System.out.println("Erreur de l'API : " + response.body());
+//                return "Erreur de l'API : " + response.body();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.out.println("Erreur d'E/S : " + e.getMessage());
+//            return "Erreur d'E/S : " + e.getMessage();
+//        }
+
+
+    public String hashString(String input) {
+        try {
+            MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+            byte[] result = mDigest.digest(input.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < result.length; i++) {
+                sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }}
 
     public String login(String phoneNumber,String password,String header,String session,String deviceId, double latitude, double longitude) throws Exception {
 

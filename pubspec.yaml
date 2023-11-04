@@ -38,43 +38,43 @@ dependencies:
   fluttertoast: ^8.0.8
   shared_preferences: ^2.0.15
   flutter_conditional_rendering: ^2.0.0
-  dio: ^4.0.0
+  dio: ^5.3.3
   crypto: ^3.0.2
   bloc: ^8.0.3
   encrypt: ^5.0.1
   salomon_bottom_bar: ^3.3.1
   flutter_bloc: ^8.0.1
-  firebase_messaging: ^11.4.0
+  firebase_messaging: ^14.6.9
   flutterfire_cli: ^0.2.2+2
   file: ^6.1.4
-  firebase_core: ^1.17.0
+  firebase_core: ^2.17.0
   jwt_decode: ^0.3.1
   animated_text_kit: ^4.0.0
   get: ^4.6.5
   flutter_barcode_scanner: ^2.0.0
-  firebase_dynamic_links: ^4.2.5
+  firebase_dynamic_links: ^5.3.7
   swipe_refresh: ^1.0.2
   open_mail_app: ^0.4.5
-  form_bloc: ^0.30.0
-  flutter_form_bloc: ^0.30.1
+  form_bloc: ^0.31.0
+  flutter_form_bloc: ^0.31.0
   multi_language_json: ^1.2.0
   animated_splash_screen: ^1.2.0
   otp_text_field: ^1.1.3
-  pretty_qr_code: ^2.0.2
+  pretty_qr_code: ^3.0.0
   babstrap_settings_screen: ^0.1.3
   restart_app: ^1.1.0
   custom_radio_grouped_button: ^2.1.2
-  flutter_native_splash: ^1.3.2
+  flutter_native_splash: ^2.3.3
   flutter_toggle_tab: ^1.2.0
   iconify_flutter: ^0.0.4
-  awesome_dialog: ^2.2.1
+  awesome_dialog: ^3.1.0
   flutter_localizations:
     sdk: flutter
   google_fonts: ^4.0.4
-  geolocator: ^7.7.0
+  geolocator: ^10.1.0
   device_info: ^2.0.2
   location: ^5.0.1
-  permission_handler: ^10.4.3
+  permission_handler: ^11.0.1
 
 dependency_overrides:
   intl: 0.17.0
@@ -104,7 +104,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.3
 
 
 # For information on the generic Dart part of this file, see the

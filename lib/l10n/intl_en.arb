@@ -87,5 +87,8 @@
   "Password": "Password",
   "confirm_password": "confirm password",
   "passwordcontrollermg": "password must not be empty",
-  "phonenumberverified": "your phone number is verified"
+  "phonenumberverified": "your phone number is verified",
+    "forgot_password": "Password forgotten ?"
+
+
 }

@@ -80,7 +80,8 @@
   "Password": "mot de passe",
   "confirm_password": "confimer mot de passe",
   "passwordcontrollermg": "le mot de passe ne doit pas être vide",
-  "phonenumberverified": "votre numéro de téléphone est vérifié "
+  "phonenumberverified": "votre numéro de téléphone est vérifié ",
+  "forgot_password": "Mot de passe oublié?"
 
 
 

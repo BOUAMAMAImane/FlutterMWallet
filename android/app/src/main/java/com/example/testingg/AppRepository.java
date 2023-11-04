@@ -1,6 +1,7 @@
 package com.example.testingg;
 
 import androidx.annotation.NonNull;
+import java.security.MessageDigest;
 
 import com.example.mylibrarytts.Auth;
 import com.example.mylibrarytts.User;
@@ -15,6 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+import java.security.NoSuchAlgorithmException;
 
 public class AppRepository {
 
@@ -94,7 +96,13 @@ public class AppRepository {
         String cin = call.argument("cin");
         String gender = call.argument("gender");
         String deviceId = call.argument("deviceId");
+        String question1 = call.argument("question1");
+        String question2 = call.argument("question2");
+        String question3 = call.argument("question3");
 
+        String hashedQuestion1 = hashString(question1);
+        String hashedQuestion2 = hashString(question2);
+        String hashedQuestion3 = hashString(question3);
         Map<String,Object>data = new HashMap<>();
         data.put("email",email);
         data.put("password",password);
@@ -104,6 +112,13 @@ public class AppRepository {
         data.put("cin",cin);
         data.put("gender",gender);
         data.put("deviceId", deviceId);
+//        data.put("question1", question1);
+//        data.put("question2", question2);
+//        data.put("question3", question3);
+        data.put("question1", hashedQuestion1);
+        data.put("question2", hashedQuestion2);
+        data.put("question3", hashedQuestion3);
+
         try{
             String signupResp= new Auth().register(data);
             result.success(signupResp);
@@ -111,7 +126,20 @@ public class AppRepository {
             e.printStackTrace();
         }
     }
-
+    public String hashString(String input) {
+        try {
+            MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+            byte[] result = mDigest.digest(input.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < result.length; i++) {
+                sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public void addTokenToUser(@NonNull MethodCall call, MethodChannel.Result result) {
         String email = call.argument("email");
         String deviceToken = call.argument("deviceToken");
@@ -198,5 +226,25 @@ public class AppRepository {
         String secret = call.argument("secret");
         String changePassword = new User().changePassword(email,password,newPassword,secret);
         result.success(changePassword);
+    }
+    public void makenewPassword(@NonNull MethodCall call, MethodChannel.Result result) throws Exception {
+        System.out.println("apprepository make new password");
+
+        String email = call.argument("email");
+        String password = call.argument("password");
+        String question1 = call.argument("question1");
+        String question2= call.argument("question2");
+        String question3= call.argument("question3");
+        String secret = call.argument("secret");
+
+        System.out.println(email);
+        System.out.println(password);
+        System.out.println(question1);
+        System.out.println(question2);
+        System.out.println(question3);
+
+
+        String makenewPassword = new Auth().makenewPassword(email,password,question1,question2,question3,secret);
+        result.success(makenewPassword);
     }
 }

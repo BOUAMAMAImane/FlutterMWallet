@@ -9,6 +9,9 @@ class UserModel1 {
   late final String appUserRole;
   late final bool locked;
   late final bool enabled;
+  late final String question1;
+  late final String question2;
+  late final String question3;
 
   late final List<Authorities> authorities;
   late final bool accountNonExpired;
@@ -26,6 +29,9 @@ class UserModel1 {
     appUserRole = json['appUserRole'];
     locked = json['locked'];
     enabled = json['enabled'];
+    question1 = json['question1']; // Ajout de la première question
+    question2 = json['question2']; // Ajout de la deuxième question
+    question3 = json['question3'];
 
     authorities = List.from(json['authorities'])
         .map((e) => Authorities.fromJson(e))
@@ -47,6 +53,9 @@ class UserModel1 {
     _data['appUserRole'] = appUserRole;
     _data['locked'] = locked;
     _data['enabled'] = enabled;
+    _data['question1'] = question1;
+    _data['question2'] = question2;
+    _data['question3'] = question3;
 
     _data['authorities'] = authorities.map((e) => e.toJson()).toList();
     _data['accountNonExpired'] = accountNonExpired;

@@ -14,7 +14,7 @@ import 'package:testingg/network/remote/dio_helper.dart';
 import 'package:testingg/screens/AccountScreen.dart';
 
 import 'package:testingg/screens/HomeScreen.dart';
-import 'package:testingg/screens/PageMotSecret.dart';
+import 'package:testingg/screens/LoginScreen.dart';
 import 'package:testingg/screens/Payment/BillPaymentDetails.dart';
 import 'package:testingg/screens/TransactionsHistory/TransactionReceiveScreen.dart';
 import 'package:testingg/screens/TransactionsHistory/TransactionSentScreen.dart';
@@ -26,7 +26,6 @@ import '../models/TransactionInfos.dart';
 import '../screens/AccueilScreen.dart';
 import '../screens/Transfer/TransferScreen.dart';
 import 'package:restart_app/restart_app.dart';
-import 'package:testingg/screens/PageMotSecret.dart';
 
 class AppCubit extends Cubit<AppStates> {
   bool verified = false;
@@ -45,12 +44,16 @@ class AppCubit extends Cubit<AppStates> {
   String? lastName;
   String? username;
   String? password;
+  String? newPassword;
+
   String? cin;
   String? phone_number;
   String? gender;
   double? latitude;
   double? longitude;
-
+  String? question1;
+  String? question2;
+  String? question3;
 
   static AppCubit get(context) => BlocProvider.of(context);
   static late Widget widget;
@@ -189,6 +192,9 @@ class AppCubit extends Cubit<AppStates> {
     required String? cin,
     required String? gender,
     required String? deviceId,
+    required String? question1,
+    required String? question2,
+    required String? question3,
   }) async {
     emit(AppSigninInitialStates());
     try {
@@ -201,7 +207,10 @@ class AppCubit extends Cubit<AppStates> {
         "lastName": lastName,
         "cin": cin,
         "gender": gender,
-        "deviceId": deviceId
+        "deviceId": deviceId,
+        "question1":question1,
+        "question2":question2,
+        "question3":question3
       });
 
       emit(AppSigninSuccessStates());
@@ -358,6 +367,44 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppVersementErrorStates());
     }
   }
+  void makenewPassword({
+    required String email,
+    required String password,
+    required String question1,
+    required String question2,
+    required String question3,
+    required String secret,
+    required context,
+  }) async {
+    print(email);
+    print(question1);
+    print(question2);
+    print(question3);
+    print(secret);
+    print(password);
+    const MethodChannel USERCHANNEL = MethodChannel("payit/auth");
+    try {
+      var response = await USERCHANNEL.invokeMethod("makenewPassword", {
+        "email": email,
+        "password": password,
+        "question1": question1,
+        "question2": question2,
+        "question3": question3,
+        "secret": secret,
+
+      });
+      currentIndex = 0;
+      navigateAndFinish(context, LoginScreen());
+      showToast(message: response);
+      emit(AppVersementSuccessStates());
+      emit(AppSendOtpSuccessState(response));
+      print("c fait !" );
+
+    } catch (e) {
+      print(e.toString());
+      emit(AppVersementErrorStates());
+    }
+  }
   void sendMotsecret({
     required String email,
   }) async {
@@ -374,7 +421,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppVersementErrorStates());
     }
   }
-
 
   void makeVersement(montant, message, destinataire) async {
     emit(AppVersementInitialStates());

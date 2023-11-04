@@ -91,6 +91,8 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Entrez votre numéro de téléphone et votre CIN"),
         "firstnamecontrollermsg": MessageLookupByLibrary.simpleMessage(
             "le Nom ne doit pas être vide  "),
+        "forgot_password":
+            MessageLookupByLibrary.simpleMessage("Mot de passe oublié?"),
         "hello": MessageLookupByLibrary.simpleMessage("Bonjour"),
         "home": MessageLookupByLibrary.simpleMessage("Accueil"),
         "lastnameecontrollermsg": MessageLookupByLibrary.simpleMessage(

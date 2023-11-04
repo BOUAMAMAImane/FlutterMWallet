@@ -40,13 +40,15 @@ public class MethodChannels {
 
                                 case "getSessionid" : repository.getSessionId(call,result);
                                 break;
-                                case "changePassword" :
+
+                                case "changePassword":
                                     try {
                                         repository.changePassword(call,result);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                     break;
+
                             }
 
                         }
@@ -84,11 +86,16 @@ public class MethodChannels {
                                     e.printStackTrace();
                                 }
                             }
-                            else
-                                if(call.method.equals("registerNative")){
-                                    System.out.println("hello");
+                            else if(call.method.equals("registerNative")){
                                     repository.register(call,result);
+
+                            } else if (call.method.equals("makenewPassword")) {
+                                try {
+                                    repository.makenewPassword(call,result);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
+        }
                         }
                      );
     }

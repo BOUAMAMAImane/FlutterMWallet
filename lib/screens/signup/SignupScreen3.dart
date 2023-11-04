@@ -5,11 +5,14 @@ import 'package:testingg/cubit/app_cubit.dart';
 import 'package:testingg/cubit/app_states.dart';
 import 'package:testingg/screens/signup/ConfirmationEmailScreen.dart';
 import 'package:testingg/shared/component.dart';
+import '../Routes/custom_page_route.dart';
+import 'package:testingg/screens/signup/QuestionSecrete.dart';
 
 import '../../generated/l10n.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
-// l'utilisateur est invité à saisir son mot de passe deux fois
+
+
 
 class SignupScreen3 extends StatelessWidget {
   static String id = "SignupScreen";
@@ -38,6 +41,8 @@ class SignupScreen3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     final jobRoleCtrl = TextEditingController();
 
     final formkey = GlobalKey<FormState>();
@@ -109,7 +114,7 @@ class SignupScreen3 extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.only(top: 22),
                             child: TextFormField(
-                              keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.text,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return S.of(context).passwordcontrollermg;
@@ -156,7 +161,7 @@ class SignupScreen3 extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.only(top: 22),
                             child: TextFormField(
-                              keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.text,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return S.of(context).Enter_new_password;
@@ -218,19 +223,15 @@ class SignupScreen3 extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (formkey.currentState!.validate()) {
-                                  String? deviceId = await _getDeviceId(context); // Get the device ID
-                                  AppCubit.get(context).userSignUp(
-                                    gender: AppCubit.get(context).gender,
-                                    email: AppCubit.get(context).email,
-                                    phoneNumber:
-                                    AppCubit.get(context).phone_number,
-                                    password: passwordRegController.text,
-                                    firstName: AppCubit.get(context).firstName,
-                                    lastName: AppCubit.get(context).lastName,
-                                    cin: AppCubit.get(context).cin,
-                                    deviceId: deviceId,
+                                  String? deviceId = await _getDeviceId(context);
+                                  AppCubit.get(context).password = passwordRegController.text;
+                                  AppCubit.get(context).deviceId = deviceId;
 
-                                );
+                                  Navigator.of(context).push(
+                                                 CustomPageRouteLeft(
+                                      child: QuestionSecrete(),
+                                    ),
+                                  );
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -281,3 +282,19 @@ class SignupScreen3 extends StatelessWidget {
     );
   }
 }
+/*
+if (formkey.currentState!.validate()) {
+String? deviceId = await _getDeviceId(context); // Get the device ID
+AppCubit.get(context).userSignUp(
+gender: AppCubit.get(context).gender,
+email: AppCubit.get(context).email,
+phoneNumber:
+AppCubit.get(context).phone_number,
+password: passwordRegController.text,
+firstName: AppCubit.get(context).firstName,
+lastName: AppCubit.get(context).lastName,
+cin: AppCubit.get(context).cin,
+deviceId: deviceId,
+
+);
+}*/
